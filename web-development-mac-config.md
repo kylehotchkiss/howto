@@ -103,25 +103,32 @@ ServerAdmin %your-email-address%
 For this next step, we are going to install software from Homebrew (dnsmasq) which will create a local TLD (I use `.mac` but you can change it to anything that isn't being used as an actual TLD on the internet. Beware the `.dev` is a real TLD with HSTS and is not supported by this setup as of 2018.)
 
 1) Install Homebrew
+
 `$ brew install dnsmasq`
 
 2) Copy config example
+
 `$ cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) /usr/local/etc/dnsmasq.conf`
 
 3) Start DNSMasq on startup
-`$ sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/`
+
+`$ sudo brew services start dnsmasq`
 
 4) Handle all .mac TLDs. Change `mac` to your own TLD here if you want to use something different.
+
 `$ echo "address=/mac/127.0.0.1" >> /usr/local/etc/dnsmasq.conf`
 
 5) Start DNSMasq
+
 ` $sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist`
 
 6) Tell OSX to send all .mac requests to DNSMasq. Change `mac` to your own TLD here if you want to use something different.
+
 `$ sudo mkdir -p /etc/resolver`
 `$ sudo tee /etc/resolver/mac >/dev/null <<EOF`
 `nameserver 127.0.0.1`
 `EOF`
 
-# Ping to test
+7) Ping to test
+
 `$ ping your-laptop.mac`
