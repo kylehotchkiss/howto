@@ -34,7 +34,7 @@ $ sudo chmod -R 775 /Sites
 We're going to use the command line editor `nano` to make some changes to the system Apache install. MacOS suprisingly ships a capable instance of Apache out of the box, and we just need to turn on `vhosts` and `php`. Line numbers in this apache config file tend to change throughout system releases, so use `nano`s `control-w` command to search for the specific line you need to edit. Cancel your search with `control-c` to perform another search
 
 1) Open the apache file for editing
-`sudo nano /etc/apache2/http.conf`
+`$ sudo nano /etc/apache2/http.conf`
 
 2) Turn on the Vhosts Alias module
 * Search for `LoadModule vhost_alias_module`
@@ -58,10 +58,10 @@ We're going to use the command line editor `nano` to make some changes to the sy
 
 7) Test out configuration
 * Save the file in Nano with `control-o`, then press `return`
-* Run `apachectl configtest` to verify your changes were valid.
+* Run `$ apachectl configtest` to verify your changes were valid.
 
 8) Add the vhosts configuration to use directories in /Sites
-* `sudo nano /etc/apache2/extra/httpd-vhosts.conf`
+* `# sudo nano /etc/apache2/extra/httpd-vhosts.conf`
 * Replace with the following (put your own values in line 1 and 2):
 
 ```
@@ -95,7 +95,33 @@ ServerAdmin %your-email-address%
 ```
 * Save with `control-o` and `return`
 
-* Run `apachectl configtest` again to verify your changes were valid.
-* Run `sudo apachectl restart` to reboot apache.
+* Run `$ apachectl configtest` again to verify your changes were valid.
+* Run `$ sudo apachectl restart` to reboot apache.
 
+# Step 3: Configuring DNSMasq
 
+For this next step, we are going to install software from Homebrew (dnsmasq) which will create a local TLD (I use `.mac` but you can change it to anything that isn't being used as an actual TLD on the internet. Beware the `.dev` is a real TLD with HSTS and is not supported by this setup as of 2018.)
+
+1) Install Homebrew
+`$ brew install dnsmasq`
+
+2) Copy config example
+`$ cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) /usr/local/etc/dnsmasq.conf`
+
+3) Start DNSMasq on startup
+`$ sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/`
+
+4) Handle all .mac TLDs. Change `mac` to your own TLD here if you want to use something different.
+`$ echo "address=/mac/127.0.0.1" >> /usr/local/etc/dnsmasq.conf`
+
+5) Start DNSMasq
+` $sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist`
+
+6) Tell OSX to send all .mac requests to DNSMasq. Change `mac` to your own TLD here if you want to use something different.
+`$ sudo mkdir -p /etc/resolver`
+`$ sudo tee /etc/resolver/mac >/dev/null <<EOF`
+`nameserver 127.0.0.1`
+`EOF`
+
+# Ping to test
+`$ ping your-laptop.mac`
