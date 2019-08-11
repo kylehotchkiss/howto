@@ -110,24 +110,22 @@ For this next step, we are going to install software from Homebrew (dnsmasq) whi
 
 `$ cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) /usr/local/etc/dnsmasq.conf`
 
-3) Start DNSMasq on startup
-
-`$ sudo brew services start dnsmasq`
-
-4) Handle all .mac TLDs. Change `mac` to your own TLD here if you want to use something different.
+3) Handle all .mac TLDs. Change `mac` to your own TLD here if you want to use something different.
 
 `$ echo "address=/mac/127.0.0.1" >> /usr/local/etc/dnsmasq.conf`
 
-5) Start DNSMasq
+4) Start DNSMasq, turn on system service
 
-` $sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist`
+`$ sudo brew services start dnsmasq`
 
 6) Tell OSX to send all .mac requests to DNSMasq. Change `mac` to your own TLD here if you want to use something different.
 
-`$ sudo mkdir -p /etc/resolver`
-`$ sudo tee /etc/resolver/mac >/dev/null <<EOF`
-`nameserver 127.0.0.1`
-`EOF`
+```
+$ sudo mkdir -p /etc/resolver
+$ sudo tee /etc/resolver/mac >/dev/null <<EOF
+nameserver 127.0.0.1
+EOF
+```
 
 7) Ping to test
 
