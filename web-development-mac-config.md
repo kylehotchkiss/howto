@@ -129,4 +129,19 @@ EOF
 
 7) Ping to test
 
+You may need to open a new terminal tab, or restart your system for this to work.
+
 `$ ping your-laptop.mac`
+
+# Step 4: Setting up a project
+
+1) `$ mkdir /Sites/test.mac`
+2) `$ nano /Sites/test.mac/index.html`
+3) Make a quick website, even a line of text will do here.
+4) `control-o` and `return` to save
+5) Go to `http://test.mac` in your browser. Make sure to copy/enter `http://` the first time you visit a local site so your browser remembers you're not trying to google the hostname. 
+6) If everything worked up to this point, congrats! Enjoy your fast localhosting setup, with as many projects as you please.
+
+# Step 5: Homework
+
+I challenge you to create a Wordpress install locally within one of your new localhost site folders to demonstrate that this configuration is useful for locally hosted applications as well. Good luck!
