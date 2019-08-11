@@ -30,3 +30,34 @@ $ sudo chmod -R 775 /Sites
 ```
 
 ## Step 2: Configuring Apache
+
+We're going to use the command line editor `nano` to make some changes to the system Apache install. MacOS suprisingly ships a capable instance of Apache out of the box, and we just need to turn on `vhosts` and `php`. Line numbers in this apache config file tend to change throughout system releases, so use `nano`s `control-w` command to search for the specific line you need to edit. Cancel your search with `control-c` to perform another search
+
+1) Open the apache file for editing
+`sudo nano /etc/apache2/http.conf`
+
+2) Turn on the Vhosts Alias module
+* Search for `LoadModule vhost_alias_module`
+* Uncomment this line
+
+3) Turn on the Rewrite module
+* Search for `LoadModule rewrite_module`
+* Uncomment this line
+
+4) Turn on PHP
+* Search for `LoadModule php7_module`
+* Uncomment this line
+
+5) Turn on PHP Directory Indexes
+* Search for `DirectoryIndex index.html`
+* Add in `index.php` like this `DirectoryIndex index.php index.html`
+
+6) Turn on Vhosts config file
+* Search for `httpd-vhosts.conf` 
+* Uncomment the `#` before `Include`
+
+7) Test out configuration
+* Save the file in Nano with `control-o`, then press `return`
+* Run `apachectl configtest` to verify your changes were valid.
+
+
