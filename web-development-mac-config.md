@@ -60,4 +60,42 @@ We're going to use the command line editor `nano` to make some changes to the sy
 * Save the file in Nano with `control-o`, then press `return`
 * Run `apachectl configtest` to verify your changes were valid.
 
+8) Add the vhosts configuration to use directories in /Sites
+* `sudo nano /etc/apache2/extra/httpd-vhosts.conf`
+* Replace with the following (put your own values in line 1 and 2):
+
+```
+ServerName %your-host-name%
+ServerAdmin %your-email-address%
+
+<VirtualHost *:80>
+  # Use the Host: header.  
+  UseCanonicalName off
+
+  # The location of the sites
+  VirtualDocumentRoot /Sites/%0/
+  
+  # Properly secure the filesystem.  
+  <Directory />
+    Options FollowSymLinks    
+    AllowOverride None
+  </Directory>
+  
+  # Allow access to the sites.  
+  <Directory /Sites/>
+   Options Indexes FollowSymLinks MultiViews   
+   AllowOverride All
+   Require all granted  
+  </Directory>
+
+  # Log whatever happens.
+  ErrorLog /Sites/_apache/error.log  LogLevel warn
+  CustomLog /Sites/_apache/access.log combined
+</VirtualHost>
+```
+* Save with `control-o` and `return`
+
+* Run `apachectl configtest` again to verify your changes were valid.
+* Run `sudo apachectl restart` to reboot apache.
+
 
