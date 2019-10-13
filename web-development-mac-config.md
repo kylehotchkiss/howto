@@ -1,4 +1,8 @@
 # Web Development Mac Config
+
+**Update October 13, 2019:  
+Due to the new [read-only filesystem security rules in MacOS Catalina](https://support.apple.com/en-in/HT210650), I changed from using `/Sites` to `/Users/Shared/Sites`**
+
 I've been using a special configuration on my Mac computers the past 10 years to help me develop multiple sites that can be quickly bootstrapped without changing any Apache config files or hostname file.
 
 This avoids a few patterns in local site development I dislike, such as:
@@ -19,14 +23,14 @@ Now verify it worked:
 You should see this:
 `yes %your-username% is a member of _www`
 
-Now, let's create a `/Sites` directory and make sure that both our user and Apache have access to it by running the following commands:
+Now, let's create a `/Users/Shared/Sites` directory and make sure that both our user and Apache have access to it by running the following commands:
 
 ```
-$ sudo mkdir /Sites
-$ sudo mkdir /Sites/_apache
-$ sudo touch /Sites/_apache/error.log /Sites/_apache/access.log
-$ sudo chgrp -R _www /Sites
-$ sudo chmod -R 775 /Sites
+$ sudo mkdir /Users/Shared/Sites
+$ sudo mkdir /Users/Shared/Sites/_apache
+$ sudo touch /Users/Shared/Sites/_apache/error.log /Users/Shared/Sites/_apache/access.log
+$ sudo chgrp -R _www /Users/Shared/Sites
+$ sudo chmod -R 775 /Users/Shared/Sites
 ```
 
 ## Step 2: Configuring Apache
@@ -60,7 +64,7 @@ We're going to use the command line editor `nano` to make some changes to the sy
 * Save the file in Nano with `control-o`, then press `return`
 * Run `$ apachectl configtest` to verify your changes were valid.
 
-8) Add the vhosts configuration to use directories in /Sites
+8) Add the vhosts configuration to use directories in /Users/Shared/Sites
 * `# sudo nano /etc/apache2/extra/httpd-vhosts.conf`
 * Replace with the following (put your own values in line 1 and 2):
 
@@ -73,7 +77,7 @@ ServerAdmin %your-email-address%
   UseCanonicalName off
 
   # The location of the sites
-  VirtualDocumentRoot /Sites/%0/
+  VirtualDocumentRoot /Users/Shared/Sites/%0/
   
   # Properly secure the filesystem.  
   <Directory />
@@ -82,15 +86,15 @@ ServerAdmin %your-email-address%
   </Directory>
   
   # Allow access to the sites.  
-  <Directory /Sites/>
+  <Directory /Users/Shared/Sites/>
    Options Indexes FollowSymLinks MultiViews   
    AllowOverride All
    Require all granted  
   </Directory>
 
   # Log whatever happens.
-  ErrorLog /Sites/_apache/error.log  LogLevel warn
-  CustomLog /Sites/_apache/access.log combined
+  ErrorLog /Users/Shared/Sites/_apache/error.log  LogLevel warn
+  CustomLog /Users/Shared/Sites/_apache/access.log combined
 </VirtualHost>
 ```
 * Save with `control-o` and `return`
@@ -135,8 +139,8 @@ You may need to open a new terminal tab, or restart your system for this to work
 
 # Step 4: Setting up a project
 
-1) `$ mkdir /Sites/test.mac`
-2) `$ nano /Sites/test.mac/index.html`
+1) `$ mkdir /Users/Shared/Sites/test.mac`
+2) `$ nano /Users/Shared/Sites/test.mac/index.html`
 3) Make a quick website, even a line of text will do here.
 4) `control-o` and `return` to save
 5) Go to `http://test.mac` in your browser. Make sure to copy/enter `http://` the first time you visit a local site so your browser remembers you're not trying to google the hostname. 
