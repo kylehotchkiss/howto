@@ -38,7 +38,7 @@ $ sudo chmod -R 775 /Users/Shared/Sites
 We're going to use the command line editor `nano` to make some changes to the system Apache install. MacOS suprisingly ships a capable instance of Apache out of the box, and we just need to turn on `vhosts` and `php`. Line numbers in this apache config file tend to change throughout system releases, so use `nano`s `control-w` command to search for the specific line you need to edit. Cancel your search with `control-c` to perform another search
 
 1) Open the apache file for editing
-`$ sudo nano /etc/apache2/http.conf`
+`$ sudo nano /etc/apache2/httpd.conf`
 
 2) Turn on the Vhosts Alias module
 * Search for `LoadModule vhost_alias_module`
@@ -93,7 +93,7 @@ ServerAdmin %your-email-address%
   </Directory>
 
   # Log whatever happens.
-  ErrorLog /Users/Shared/Sites/_apache/error.log  LogLevel warn
+  ErrorLog /Users/Shared/Sites/_apache/error.log
   CustomLog /Users/Shared/Sites/_apache/access.log combined
 </VirtualHost>
 ```
